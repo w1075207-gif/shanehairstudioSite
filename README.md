@@ -16,5 +16,6 @@ This repository stores **official salon photos** and the **price list** image us
 | `site/env-whisky.png`, `site/env-mask.png` | Environment section |
 | `site/gallery-01.png` … `gallery-06.png` | Portfolio grid |
 | `price-list.png` | Full price list graphic |
+| `design-reference-full.png` | **Official full-page visual (576×1024)** – same image choices as the delivered mockup (hero VW, stylists, portfolio, interior). The live React page uses this file as the main poster. |
 
 Source site code: [yiyuSite](https://github.com/w1075207-gif/siteYiyu) → `src/pages/ShaneHairstudio.jsx`, served from `public/shane/`.
