@@ -21,3 +21,8 @@
 ## 2026-05-11 (copy real salon assets)
 
 - Synced production PNGs from `~/yiyuSite/public/shane/site/` and `price-list.png` into `~/shanehairstudioSite/src/assets/shane/` (overwriting placeholders). `npm run build` emits ~21 distinct hashed `/assets/*.png` files (~2.6MB total).
+
+## 2026-05-11 (favicon)
+
+- Added `public/favicon.svg`: dark rounded square (`#0a0a0a`) + orange **S** stroke (`#e8752e`, matches site accent).
+- `index.html`: `<link rel="icon" href="/favicon.svg" type="image/svg+xml" />` and `theme-color` `#0a0a0a`.
