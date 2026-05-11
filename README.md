@@ -1,21 +1,43 @@
-# Shane Hair Studio – static assets
+# Shane's Hair Studio — standalone site
 
-This repository stores **official salon photos** and the **price list** image used by the live page:
+React + Vite single-page site derived from the Yiyu portal page. Static assets live under `public/shane/`.
 
-- **Live app:** [app.yiyuwang.be/shanehairstudio](https://app.yiyuwang.be/shanehairstudio) (React route on YiyuSite)
-- **Google Maps:** [Shane's HairStudio「Asian」](https://www.google.com/maps/place/Shane%E2%80%99s+HairStudio%E3%80%8CAsian%E3%80%8D/@38.7267389,-9.1368754,17z)
+## Local development
 
-## Contents
+```bash
+npm install
+npm run dev
+```
 
-| Path | Description |
-|------|-------------|
-| `site/hero-stylist.png` | Hero background (stylist, salon) |
-| `site/storefront.png` | Storefront / exterior reference |
-| `site/about-salon.png` | About section |
-| `site/team-work.png` | Team / service photo |
-| `site/env-whisky.png`, `site/env-mask.png` | Environment section |
-| `site/gallery-01.png` … `gallery-06.png` | Portfolio grid |
-| `price-list.png` | Full price list graphic |
-| `design-reference-full.png` | **Official full-page visual (576×1024)** – same image choices as the delivered mockup (hero VW, stylists, portfolio, interior). The live React page uses this file as the main poster. |
+Production bundle:
 
-Source site code: [yiyuSite](https://github.com/w1075207-gif/siteYiyu) → `src/pages/ShaneHairstudio.jsx`, served from `public/shane/`.
+```bash
+npm run build
+npm run preview
+```
+
+## Cloudflare Pages
+
+| Setting | Value |
+|--------|--------|
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Root directory | `/` (repository root) |
+
+Recommended environment variable:
+
+| Variable | Example |
+|----------|---------|
+| `NODE_VERSION` | `20` or `22` |
+
+Connect the Git repository in the Cloudflare dashboard, or deploy built artifacts with Wrangler:
+
+```bash
+npx wrangler pages deploy dist --project-name=<your-project>
+```
+
+This app is a single HTML shell at `/` with no client-side router; no SPA rewrite rules are required unless you add routes later.
+
+## Assets
+
+`public/shane/site/*.png` and `public/shane/price-list.png` must match the filenames referenced in `src/ShaneHairstudio.jsx`. If this repo ships minimal placeholder images, replace them with your full-resolution salon photos before production.
