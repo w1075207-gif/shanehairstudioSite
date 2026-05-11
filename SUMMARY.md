@@ -22,6 +22,10 @@
 
 - Synced production PNGs from `~/yiyuSite/public/shane/site/` and `price-list.png` into `~/shanehairstudioSite/src/assets/shane/` (overwriting placeholders). `npm run build` emits ~21 distinct hashed `/assets/*.png` files (~2.6MB total).
 
+## 2026-05-11 (full-bleed background)
+
+- **ShaneHairstudio.jsx** inline CSS: reset `html, body` margin/padding, set dark `background-color` to match the site, full-width `#root` and `.shane-root` (`width/max-width: 100%`, `overflow-x: hidden`) so browser default white margins no longer show as side “white borders”.
+
 ## 2026-05-11 (digitperm positioning & hours)
 
 - **i18n (zh/en/pt/ko/ja):** Repositioned copy around **Digitperm / digital perm**; softened colour-as-secondary messaging; updated hero, about, price intro, service cards. Replaced old hour keys with `hoursRegularLine` (Tue–Sat 11:00–18:00) and `hoursMonSunNote` (Mon/Sun irregular — confirm via WhatsApp). Added full **digitperm** article strings (`digitpermTitle`, `digitpermLead`, three `digitpermH3*` blocks with bullet lists) — zh uses your supplied Traditional Chinese; other locales use aligned summaries.

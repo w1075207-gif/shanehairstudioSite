@@ -116,10 +116,32 @@ function IconWhatsApp() {
 }
 
 const CSS = `
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    background-color: ${BLACK};
+    -webkit-font-smoothing: antialiased;
+  }
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
   .shane-root * { box-sizing: border-box; margin: 0; padding: 0; }
-  .shane-root { scroll-behavior: smooth; background: ${BLACK}; color: ${TEXT};
+  .shane-root {
+    scroll-behavior: smooth;
+    background: ${BLACK};
+    color: ${TEXT};
     font-family: 'Outfit', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', system-ui, sans-serif;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   .shane-root :focus-visible {
     outline: 2px solid ${ORANGE};
