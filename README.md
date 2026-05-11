@@ -23,18 +23,29 @@ npm run preview
 | Build command | `npm run build` |
 | Build output directory | `dist` |
 | Root directory | `/` (repository root) |
+| **Deploy command** | **Leave empty** for normal static Pages (recommended). |
 
-Recommended environment variable:
+For a **static Vite site**, Cloudflare Pages publishes `dist` automatically after the build step. You do **not** need a custom deploy command.
 
-| Variable | Example |
-|----------|---------|
-| `NODE_VERSION` | `20` or `22` |
+### If you set a deploy command (e.g. `npx wrangler versions upload`)
 
-Connect the Git repository in the Cloudflare dashboard, or deploy built artifacts with Wrangler:
+Wrangler **4.x** requires **Node.js ≥ 22**. Set this in **Pages → Settings → Environment variables** (Production + Preview):
+
+| Variable | Value |
+|----------|--------|
+| `NODE_VERSION` | `22` |
+
+Without Node 22, deploy fails with: `Wrangler requires at least Node.js v22.0.0`.
+
+### CLI deploy (alternative)
+
+From your machine after `npm run build`:
 
 ```bash
 npx wrangler pages deploy dist --project-name=<your-project>
 ```
+
+Use a local Node 22+ when Wrangler 4 is involved.
 
 This app is a single HTML shell at `/` with no client-side router; no SPA rewrite rules are required unless you add routes later.
 
