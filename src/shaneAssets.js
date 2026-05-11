@@ -1,5 +1,5 @@
 /**
- * Bundled image URLs — Vite emits hashed paths under /assets/, reliable on Cloudflare Pages/Workers.
+ * Bundled image URLs — Vite emits files under /assets/ (see assetsInlineLimit: 0 in vite.config.js).
  */
 import heroVwPanorama from './assets/shane/site/hero-vw-panorama.png';
 import navLogo from './assets/shane/site/nav-logo.png';

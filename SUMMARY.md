@@ -13,7 +13,8 @@
 - README: clarified that **Deploy command** should be **empty** for standard static Pages; if using `wrangler versions upload`, set **`NODE_VERSION=22`** (Wrangler 4 requires Node ≥22).
 - `.nvmrc` set to `22`; `package.json` `engines.node` set to `>=22` for alignment with Wrangler 4.
 
-## 2026-05-11 (image loading)
+## 2026-05-11 (hero + asset URLs)
 
-- Moved salon images to `src/assets/shane/` and `src/shaneAssets.js` so Vite bundles URLs (fixes missing `/shane/site/...` on Cloudflare). Removed duplicate `public/shane/`.
-- Price list link uses `PRICE_LIST_URL` from the same module.
+- `vite.config.js`: `build.assetsInlineLimit: 0` so images are always real `/assets/*.png` files (no `data:` in JS).
+- Hero section: `<img className="shane-hero-photo-img">` instead of CSS `background-image`, for broader browser/CSP compatibility.
+- Identical placeholder PNGs may dedupe to one hashed file in `dist/assets/` until you upload distinct photos.

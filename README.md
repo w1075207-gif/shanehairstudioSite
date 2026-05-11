@@ -51,6 +51,6 @@ This app is a single HTML shell at `/` with no client-side router; no SPA rewrit
 
 ## Assets
 
-Image files live in `src/assets/shane/` and are imported in `src/shaneAssets.js`. Vite bundles them (small files may be inlined; large photos are emitted as files under `dist/assets/` with hashed names). This avoids broken `/shane/...` paths on Cloudflare Workers or other deploy targets.
+Image files live in `src/assets/shane/` and are imported in `src/shaneAssets.js`. Vite emits them under `/assets/` with content hashes (small identical placeholders may dedupe to one file). Hero uses an `<img>` for reliable loading vs CSS `background-image` + `data:` URLs.
 
-Replace the placeholder PNGs in `src/assets/shane/site/` and `src/assets/shane/price-list.png` with your full-resolution salon photos; keep the same filenames or update the imports in `shaneAssets.js`.
+Replace the placeholder PNGs in `src/assets/shane/site/` and `src/assets/shane/price-list.png` with your full-resolution salon photos for production.

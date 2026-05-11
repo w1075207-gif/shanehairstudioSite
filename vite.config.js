@@ -7,5 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // Always emit real files under /assets/ — avoids data: URLs blocked for CSS backgrounds / strict CSP.
+    assetsInlineLimit: 0,
   },
 });

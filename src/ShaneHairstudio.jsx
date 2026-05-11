@@ -266,10 +266,17 @@ const CSS = `
   .shane-hero-photo {
     position: relative;
     min-height: 280px;
-    background-image: url(${HERO_BG});
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 52% center;
+    overflow: hidden;
+  }
+  .shane-hero-photo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 52% center;
+    display: block;
+    pointer-events: none;
   }
   .shane-hero-photoGrad {
     position: absolute;
@@ -675,7 +682,9 @@ const CSS = `
     }
     .shane-hero-photo {
       min-height: 46vh;
-      background-position: center;
+    }
+    .shane-hero-photo-img {
+      object-position: center;
     }
   }
   @media (max-width: 520px) {
@@ -873,6 +882,7 @@ export default function ShaneHairstudio() {
               </div>
             </div>
             <div className="shane-hero-photo">
+              <img className="shane-hero-photo-img" src={HERO_BG} alt="" decoding="async" />
               <div className="shane-hero-photoGrad" aria-hidden />
               <div className="shane-hero-pin">
                 <span aria-hidden>📍</span>
