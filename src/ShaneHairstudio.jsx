@@ -39,8 +39,8 @@ const MAPS_URL = 'https://maps.app.goo.gl/axbCgenAmhye3kq39';
 const MAPS_EMBED =
   'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.214!2d-9.136875400000001!3d38.726738899999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19333796b3ec81%3A0x9e55a011962cd8f8!2sShane\'s%20HairStudio%E3%80%8CAsian%E3%80%8D!5e0!3m2!1sen!2spt!4v1715000000000!5m2!1sen!2spt';
 
-const WHATSAPP_URL = 'https://wa.me/351912345678';
-const WHATSAPP_DISPLAY = '+351 912 345 678';
+const WHATSAPP_URL = 'https://wa.me/351936825171';
+const WHATSAPP_DISPLAY = '+351 936 825 171';
 const INSTAGRAM_URL = 'https://www.instagram.com/shane_hairstudio/';
 const INSTAGRAM_HANDLE = 'shane_hairstudio';
 
@@ -59,6 +59,13 @@ function langAriaLabel(code, t) {
 
 function gallerySlotWide(i) {
   return i % 4 === 0;
+}
+
+function splitBulletLines(text) {
+  return text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
 }
 
 function IconFeatTeam() {
@@ -611,6 +618,48 @@ const CSS = `
   .shane-social a:hover { border-color: ${ORANGE}; color: ${ORANGE}; }
   .shane-social-svg { width: 21px; height: 21px; display: block; flex-shrink: 0; }
 
+  /* Digitperm long-form */
+  .shane-prose {
+    max-width: min(720px, 100%);
+    margin: 0 auto;
+    text-align: left;
+  }
+  .shane-prose-main {
+    font-size: clamp(1.12rem, 2.2vw, 1.38rem);
+    color: ${TEXT};
+    margin-bottom: 14px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+  }
+  .shane-prose-lead {
+    color: ${TEXT_MUTED};
+    font-size: clamp(0.88rem, 1.5vw, 0.96rem);
+    line-height: 1.85;
+    margin-bottom: 28px;
+  }
+  .shane-prose h4 {
+    font-size: 1.02rem;
+    color: ${ORANGE};
+    margin: 26px 0 10px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .shane-prose .shane-prose-subintro {
+    color: ${TEXT_MUTED};
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.75;
+  }
+  .shane-prose ul {
+    margin: 0 0 18px 1.15rem;
+    padding: 0;
+    color: ${TEXT_MUTED};
+    font-size: 0.9rem;
+    line-height: 1.82;
+    list-style: disc;
+  }
+
   /* Footer */
   .shane-foot {
     border-top: 1px solid ${BORDER}; padding: 40px clamp(20px, 4vw, 48px) 48px;
@@ -711,10 +760,10 @@ export default function ShaneHairstudio() {
 
   const services = useMemo(
     () => [
-      { icon: '✂', title: t.svcCut, desc: t.svcCutDesc, href: '#contact' },
-      { icon: '◐', title: t.svcColor, desc: t.svcColorDesc, href: '#contact' },
       { icon: '◎', title: t.svcPerm, desc: t.svcPermDesc, href: '#contact' },
+      { icon: '✂', title: t.svcCut, desc: t.svcCutDesc, href: '#contact' },
       { icon: '☇', title: t.svcStyle, desc: t.svcStyleDesc, href: '#contact' },
+      { icon: '◐', title: t.svcColor, desc: t.svcColorDesc, href: '#contact' },
     ],
     [t],
   );
@@ -797,8 +846,9 @@ export default function ShaneHairstudio() {
             </a>
             <ul className="shane-nav-links" ref={menuRef}>
               <li><a href="#home">{t.navHome}</a></li>
-              <li><a href="#about">{t.navAbout}</a></li>
               <li><a href="#services">{t.navServices}</a></li>
+              <li><a href="#digitperm">{t.navDigitperm}</a></li>
+              <li><a href="#about">{t.navAbout}</a></li>
               <li><a href="#gallery">{t.navGallery}</a></li>
               <li><a href="#environment">{t.navEnvironment}</a></li>
               <li><a href="#contact">{t.navContact}</a></li>
@@ -910,6 +960,43 @@ export default function ShaneHairstudio() {
             </div>
           </section>
 
+          <section className="shane-sec" id="digitperm" aria-labelledby="shane-digitperm-h2">
+            <div className="shane-inner">
+              <div className="shane-sec-head">
+                <h2 id="shane-digitperm-h2">{t.secDigitperm}</h2>
+                <p className="en">{t.secDigitpermSub}</p>
+              </div>
+              <article className="shane-prose">
+                <h3 className="shane-prose-main">{t.digitpermTitle}</h3>
+                <p className="shane-prose-lead">{t.digitpermLead}</p>
+
+                <h4>{t.digitpermH3a}</h4>
+                <p className="shane-prose-subintro">{t.digitpermIntroA}</p>
+                <ul>
+                  {splitBulletLines(t.digitpermBulletsA).map((line, i) => (
+                    <li key={`dp-a-${i}`}>{line}</li>
+                  ))}
+                </ul>
+
+                <h4>{t.digitpermH3b}</h4>
+                <p className="shane-prose-subintro">{t.digitpermIntroB}</p>
+                <ul>
+                  {splitBulletLines(t.digitpermBulletsB).map((line, i) => (
+                    <li key={`dp-b-${i}`}>{line}</li>
+                  ))}
+                </ul>
+
+                <h4>{t.digitpermH3c}</h4>
+                <p className="shane-prose-subintro">{t.digitpermIntroC}</p>
+                <ul>
+                  {splitBulletLines(t.digitpermBulletsC).map((line, i) => (
+                    <li key={`dp-c-${i}`}>{line}</li>
+                  ))}
+                </ul>
+              </article>
+            </div>
+          </section>
+
           <section className="shane-sec shane-sec--alt" id="about">
             <div className="shane-inner">
               <div className="shane-about-grid">
@@ -991,9 +1078,9 @@ export default function ShaneHairstudio() {
                   </p>
                   <h4 style={{ marginTop: 20 }}>{t.hoursLabel}</h4>
                   <p>
-                    {t.hoursTueSat}<br />
-                    {t.hoursSun}<br />
-                    <span style={{ color: ORANGE }}>{t.hoursClosed}</span>
+                    {t.hoursRegularLine}
+                    <br />
+                    <span style={{ color: ORANGE }}>{t.hoursMonSunNote}</span>
                   </p>
                 </div>
                 <div className="shane-map">

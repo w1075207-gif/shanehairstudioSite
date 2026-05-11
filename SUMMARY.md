@@ -22,7 +22,9 @@
 
 - Synced production PNGs from `~/yiyuSite/public/shane/site/` and `price-list.png` into `~/shanehairstudioSite/src/assets/shane/` (overwriting placeholders). `npm run build` emits ~21 distinct hashed `/assets/*.png` files (~2.6MB total).
 
-## 2026-05-11 (favicon)
+## 2026-05-11 (digitperm positioning & hours)
 
-- Added `public/favicon.svg`: dark rounded square (`#0a0a0a`) + orange **S** stroke (`#e8752e`, matches site accent).
-- `index.html`: `<link rel="icon" href="/favicon.svg" type="image/svg+xml" />` and `theme-color` `#0a0a0a`.
+- **i18n (zh/en/pt/ko/ja):** Repositioned copy around **Digitperm / digital perm**; softened colour-as-secondary messaging; updated hero, about, price intro, service cards. Replaced old hour keys with `hoursRegularLine` (Tue–Sat 11:00–18:00) and `hoursMonSunNote` (Mon/Sun irregular — confirm via WhatsApp). Added full **digitperm** article strings (`digitpermTitle`, `digitpermLead`, three `digitpermH3*` blocks with bullet lists) — zh uses your supplied Traditional Chinese; other locales use aligned summaries.
+- **`ShaneHairstudio.jsx`:** WhatsApp `351936825171` / `+351 936 825 171`. Service grid order: **Perm → Cut → Style → Colour**. Nav: Home → Services → Digitperm → About → Gallery → Salon → Contact. New **`#digitperm`** section with prose styles (`.shane-prose`). Contact column shows new hours only.
+- **`index.html`:** Meta description and document title tuned for digital perm + Lisbon + WhatsApp snippet.
+
