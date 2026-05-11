@@ -7,9 +7,21 @@ import {
   writeSavedLocale,
 } from './shaneHairstudio.i18n.js';
 
+import {
+  ABOUT_IMG,
+  ENV_IMG1,
+  ENV_IMG2,
+  ENV_IMG3,
+  GALLERY_IMGS,
+  HERO_BG,
+  NAV_LOGO,
+  PRICE_LIST_URL,
+  TEAM_IMG,
+} from './shaneAssets.js';
+
 /**
  * Client mockups are visual specifications only. This page is built with real
- * markup/CSS to match that layout; photos are served from /public/shane/site/.
+ * markup/CSS to match that layout; photos are bundled via ./shaneAssets.js (Vite).
  */
 
 /** Design tokens – warm amber-orange (aligned with salon photography) */
@@ -95,22 +107,6 @@ function IconWhatsApp() {
     </svg>
   );
 }
-
-/** Local assets under public/shane/site (synced to shanehairstudioSite repo) */
-const IMG = (name) => `/shane/site/${name}`;
-
-const HERO_BG = IMG('hero-vw-panorama.png');
-const NAV_LOGO = IMG('nav-logo.png');
-
-const GALLERY_IMGS = Array.from({ length: 13 }, (_, i) =>
-  IMG(`gallery-${String(i + 1).padStart(2, '0')}.png`),
-);
-
-const ABOUT_IMG = IMG('about-shane-storefront.png');
-const TEAM_IMG = IMG('team-attentive-service.png');
-const ENV_IMG1 = IMG('env-01.png');
-const ENV_IMG2 = IMG('env-02.png');
-const ENV_IMG3 = IMG('env-03.png');
 
 const CSS = `
   .shane-root * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1034,7 +1030,7 @@ export default function ShaneHairstudio() {
 
           <div className="shane-price-strip">
             <p style={{ color: TEXT_MUTED, fontSize: '0.88rem', marginBottom: 8 }}>{t.priceIntro}</p>
-            <a href="/shane/price-list.png" target="_blank" rel="noopener noreferrer">{t.priceLink}</a>
+            <a href={PRICE_LIST_URL} target="_blank" rel="noopener noreferrer">{t.priceLink}</a>
           </div>
 
           <footer className="shane-foot">
