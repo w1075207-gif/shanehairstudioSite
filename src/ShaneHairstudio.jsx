@@ -11,7 +11,7 @@ import editableContent from './content/shaneContent.json';
 
 /**
  * Client mockups are visual specifications only. This page is built with real
- * markup/CSS to match that layout; photos are resolved from the CMS content file with public uploads as defaults.
+ * markup/CSS to match that layout; photos are resolved from the editable content file with public uploads as defaults.
  */
 
 /** Design tokens – warm amber-orange (aligned with salon photography) */
