@@ -295,6 +295,55 @@
       ];
 
       const app = document.getElementById('app');
+      const DEMO_CONTENT = {
+        assets: {
+          navLogo: '/uploads/shane/site/nav-logo.png',
+          heroBackground: '/uploads/shane/site/hero-vw-panorama.png',
+          aboutImage: '/uploads/shane/site/about-shane-storefront.png',
+          teamImage: '/uploads/shane/site/team-attentive-service.png',
+          environmentImage1: '/uploads/shane/site/env-01.png',
+          environmentImage2: '/uploads/shane/site/env-02.png',
+          environmentImage3: '/uploads/shane/site/env-03.png',
+          priceList: '/uploads/shane/price-list.png',
+          gallery: [
+            { image: '/uploads/shane/site/gallery-01.png', alt: '' },
+            { image: '/uploads/shane/site/gallery-02.png', alt: '' },
+            { image: '/uploads/shane/site/gallery-03.png', alt: '' },
+          ],
+        },
+        contact: {
+          addressLines: ['Rua dos Anjos 6A', '1150-191 Lisboa, Portugal'],
+          footerAddress: 'Rua dos Anjos 6A, 1150-191 Lisboa',
+          mapsUrl: 'https://maps.app.goo.gl/axbCgenAmhye3kq39',
+          mapsEmbed: 'https://www.google.com/maps/embed',
+          whatsappUrl: 'https://wa.me/351936825171',
+          whatsappDisplay: '+351 936 825 171',
+          instagramUrl: 'https://www.instagram.com/shane_hairstudio/',
+          instagramHandle: 'shane_hairstudio',
+        },
+        copy: {
+          zh: {
+            heroTitle: "Shane's Hair Studio",
+            heroSub: '數碼燙 · 燙髮 · 剪髮 · 造型',
+            heroLead: '專注數碼燙與個人化美學',
+            heroDesc: '這是本地 UI 預覽資料，部署後會從 GitHub 載入真實內容。',
+            heroPin: 'Anjos, Lisboa, Portugal',
+            secGallery: '作品展示',
+            galleryMore: '查看更多作品',
+          },
+          en: {
+            heroTitle: "Shane's Hair Studio",
+            heroSub: 'Digitperm · Perms · Cuts · Styling',
+            heroLead: 'Digital perm focus and personalised shapes',
+            heroDesc:
+              'This is local UI preview data. Production loads real content from GitHub.',
+            heroPin: 'Anjos, Lisbon, Portugal',
+            secGallery: 'Portfolio',
+            galleryMore: 'See more work',
+          },
+        },
+      };
+
       const state = {
         password: sessionStorage.getItem(PASSWORD_KEY) || '',
         content: null,
@@ -404,6 +453,20 @@
           return;
         }
 
+        if (
+          ['127.0.0.1', 'localhost'].includes(window.location.hostname) &&
+          state.password === 'demo'
+        ) {
+          state.content = structuredClone(DEMO_CONTENT);
+          sessionStorage.setItem(PASSWORD_KEY, state.password);
+          state.uploads.clear();
+          state.error = '';
+          state.message =
+            'Demo mode loaded. Changes will not be saved to GitHub.';
+          renderEditor();
+          return;
+        }
+
         setStatus('Loading content...');
         try {
           const response = await fetch(API_URL, { headers: authHeaders() });
@@ -423,6 +486,15 @@
 
       async function saveContent() {
         if (!state.content || state.saving) return;
+        if (
+          ['127.0.0.1', 'localhost'].includes(window.location.hostname) &&
+          state.password === 'demo'
+        ) {
+          setStatus(
+            'Demo mode: save is disabled. Deploy to Cloudflare to save.',
+          );
+          return;
+        }
         state.saving = true;
         renderStatus();
         setStatus('Saving to GitHub...');
