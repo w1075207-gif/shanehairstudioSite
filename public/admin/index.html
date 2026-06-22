@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Shane's Hair Studio Admin</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0b0c;
+        --panel: #151515;
+        --panel-2: #1d1d1d;
+        --text: #f7f2ee;
+        --muted: #b7ada6;
+        --line: #333;
+        --accent: #e8752e;
+        --danger: #e25656;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        border-radius: 6px;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        min-height: 40px;
+        padding: 10px 14px;
+      }
+
+      button.secondary {
+        background: #292929;
+        color: var(--text);
+      }
+
+      button.danger {
+        background: var(--danger);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #0e0e0f;
+        color: var(--text);
+        padding: 10px 12px;
+      }
+
+      textarea {
+        min-height: 104px;
+        resize: vertical;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+
+      label span {
+        color: var(--text);
+      }
+
+      .shell {
+        margin: 0 auto;
+        max-width: 1180px;
+        padding: 24px;
+      }
+
+      .topbar {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+
+      .brand {
+        display: grid;
+        gap: 4px;
+      }
+
+      .brand h1 {
+        font-size: clamp(1.45rem, 3vw, 2.25rem);
+        margin: 0;
+      }
+
+      .brand p,
+      .hint,
+      .status {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .card,
+      .section,
+      .gallery-item {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .card {
+        margin: 12vh auto 0;
+        max-width: 440px;
+        padding: 24px;
+      }
+
+      .section {
+        margin-top: 16px;
+        overflow: hidden;
+      }
+
+      .section summary {
+        cursor: pointer;
+        font-size: 1.05rem;
+        font-weight: 800;
+        list-style: none;
+        padding: 16px 18px;
+      }
+
+      .section summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .section-body {
+        border-top: 1px solid var(--line);
+        display: grid;
+        gap: 16px;
+        padding: 18px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .asset-row,
+      .gallery-item {
+        display: grid;
+        gap: 10px;
+      }
+
+      .asset-row {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 14px;
+      }
+
+      .gallery-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .gallery-item {
+        padding: 14px;
+      }
+
+      .gallery-actions,
+      .actions,
+      .inline-actions {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tabs button {
+        background: #242424;
+      }
+
+      .tabs button[aria-selected='true'] {
+        background: var(--accent);
+      }
+
+      .copy-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .status {
+        min-height: 22px;
+      }
+
+      .status.error {
+        color: #ff8a8a;
+      }
+
+      .status.ok {
+        color: #7ee29b;
+      }
+
+      .preview-img {
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        max-height: 110px;
+        max-width: 180px;
+        object-fit: cover;
+      }
+
+      .sticky-save {
+        align-items: center;
+        background: rgba(11, 11, 12, 0.9);
+        border-top: 1px solid var(--line);
+        bottom: 0;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+        left: 0;
+        padding: 12px 24px;
+        position: sticky;
+        right: 0;
+        z-index: 10;
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          padding: 16px;
+        }
+
+        .topbar,
+        .sticky-save {
+          align-items: stretch;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app"></main>
+    <script>
+      const API_URL = '/api/admin/content';
+      const PASSWORD_KEY = 'shane-admin-password';
+      const LOCALES = ['zh', 'en', 'pt', 'ko', 'ja'];
+      const LOCALE_LABELS = {
+        zh: 'Traditional Chinese',
+        en: 'English',
+        pt: 'Portuguese',
+        ko: 'Korean',
+        ja: 'Japanese',
+      };
+      const ASSET_FIELDS = [
+        ['navLogo', 'Navigation Logo', 'site'],
+        ['heroBackground', 'Hero Background', 'site'],
+        ['aboutImage', 'About Image', 'site'],
+        ['teamImage', 'Team Image', 'site'],
+        ['environmentImage1', 'Environment Image 1', 'site'],
+        ['environmentImage2', 'Environment Image 2', 'site'],
+        ['environmentImage3', 'Environment Image 3', 'site'],
+        ['priceList', 'Price List', ''],
+      ];
+
+      const app = document.getElementById('app');
+      const DEMO_CONTENT = {
+        assets: {
+          navLogo: '/uploads/shane/site/nav-logo.png',
+          heroBackground: '/uploads/shane/site/hero-vw-panorama.png',
+          aboutImage: '/uploads/shane/site/about-shane-storefront.png',
+          teamImage: '/uploads/shane/site/team-attentive-service.png',
+          environmentImage1: '/uploads/shane/site/env-01.png',
+          environmentImage2: '/uploads/shane/site/env-02.png',
+          environmentImage3: '/uploads/shane/site/env-03.png',
+          priceList: '/uploads/shane/price-list.png',
+          gallery: [
+            { image: '/uploads/shane/site/gallery-01.png', alt: '' },
+            { image: '/uploads/shane/site/gallery-02.png', alt: '' },
+            { image: '/uploads/shane/site/gallery-03.png', alt: '' },
+          ],
+        },
+        contact: {
+          addressLines: ['Rua dos Anjos 6A', '1150-191 Lisboa, Portugal'],
+          footerAddress: 'Rua dos Anjos 6A, 1150-191 Lisboa',
+          mapsUrl: 'https://maps.app.goo.gl/axbCgenAmhye3kq39',
+          mapsEmbed: 'https://www.google.com/maps/embed',
+          whatsappUrl: 'https://wa.me/351936825171',
+          whatsappDisplay: '+351 936 825 171',
+          instagramUrl: 'https://www.instagram.com/shane_hairstudio/',
+          instagramHandle: 'shane_hairstudio',
+        },
+        copy: {
+          zh: {
+            heroTitle: "Shane's Hair Studio",
+            heroSub: '數碼燙 · 燙髮 · 剪髮 · 造型',
+            heroLead: '專注數碼燙與個人化美學',
+            heroDesc: '這是本地 UI 預覽資料，部署後會從 GitHub 載入真實內容。',
+            heroPin: 'Anjos, Lisboa, Portugal',
+            secGallery: '作品展示',
+            galleryMore: '查看更多作品',
+          },
+          en: {
+            heroTitle: "Shane's Hair Studio",
+            heroSub: 'Digitperm · Perms · Cuts · Styling',
+            heroLead: 'Digital perm focus and personalised shapes',
+            heroDesc:
+              'This is local UI preview data. Production loads real content from GitHub.',
+            heroPin: 'Anjos, Lisbon, Portugal',
+            secGallery: 'Portfolio',
+            galleryMore: 'See more work',
+          },
+        },
+      };
+
+      const state = {
+        password: sessionStorage.getItem(PASSWORD_KEY) || '',
+        content: null,
+        uploads: new Map(),
+        locale: 'zh',
+        saving: false,
+        message: '',
+        error: '',
+      };
+
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function labelFromKey(key) {
+        return key
+          .replace(/([a-z])([A-Z])/g, '$1 $2')
+          .replace(/^./, (s) => s.toUpperCase());
+      }
+
+      function getPath(path) {
+        return path
+          .split('.')
+          .reduce((value, key) => value?.[key], state.content);
+      }
+
+      function setPath(path, value) {
+        const keys = path.split('.');
+        let cursor = state.content;
+        keys.slice(0, -1).forEach((key) => {
+          cursor[key] ||= {};
+          cursor = cursor[key];
+        });
+        cursor[keys.at(-1)] = value;
+      }
+
+      function authHeaders(json = false) {
+        const headers = {
+          authorization: `Bearer ${state.password}`,
+        };
+        if (json) headers['content-type'] = 'application/json';
+        return headers;
+      }
+
+      function setStatus(message, isError = false) {
+        state.message = isError ? '' : message;
+        state.error = isError ? message : '';
+        renderStatus();
+      }
+
+      function renderStatus() {
+        const node = document.querySelector('[data-status]');
+        if (!node) return;
+        node.className = `status ${state.error ? 'error' : state.message ? 'ok' : ''}`;
+        node.textContent = state.error || state.message || '';
+      }
+
+      function safeFileName(name) {
+        const cleaned = name
+          .toLowerCase()
+          .replace(/[^a-z0-9._-]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        return cleaned || 'upload.bin';
+      }
+
+      function publicUploadPath(file, folder) {
+        const stamp = new Date()
+          .toISOString()
+          .replace(/[-:.TZ]/g, '')
+          .slice(0, 14);
+        const prefix = folder ? `/uploads/shane/${folder}` : '/uploads/shane';
+        return `${prefix}/${stamp}-${safeFileName(file.name)}`;
+      }
+
+      function readFileBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = String(reader.result || '');
+            resolve(result.slice(result.indexOf(',') + 1));
+          };
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function stageUpload(file, folder) {
+        const publicPath = publicUploadPath(file, folder);
+        state.uploads.set(publicPath, {
+          path: `public${publicPath}`,
+          contentBase64: await readFileBase64(file),
+        });
+        return publicPath;
+      }
+
+      async function loadContent(event) {
+        event?.preventDefault();
+        const input = document.querySelector('[name="password"]');
+        if (input) state.password = input.value.trim();
+        if (!state.password) {
+          setStatus('Enter the admin password.', true);
+          return;
+        }
+
+        if (
+          ['127.0.0.1', 'localhost'].includes(window.location.hostname) &&
+          state.password === 'demo'
+        ) {
+          state.content = structuredClone(DEMO_CONTENT);
+          sessionStorage.setItem(PASSWORD_KEY, state.password);
+          state.uploads.clear();
+          state.error = '';
+          state.message =
+            'Demo mode loaded. Changes will not be saved to GitHub.';
+          renderEditor();
+          return;
+        }
+
+        setStatus('Loading content...');
+        try {
+          const response = await fetch(API_URL, { headers: authHeaders() });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok)
+            throw new Error(payload.error || 'Could not load content.');
+          state.content = payload.content;
+          sessionStorage.setItem(PASSWORD_KEY, state.password);
+          state.uploads.clear();
+          state.error = '';
+          state.message = 'Loaded latest content from GitHub.';
+          renderEditor();
+        } catch (error) {
+          setStatus(error.message, true);
+        }
+      }
+
+      async function saveContent() {
+        if (!state.content || state.saving) return;
+        if (
+          ['127.0.0.1', 'localhost'].includes(window.location.hostname) &&
+          state.password === 'demo'
+        ) {
+          setStatus(
+            'Demo mode: save is disabled. Deploy to Cloudflare to save.',
+          );
+          return;
+        }
+        state.saving = true;
+        renderStatus();
+        setStatus('Saving to GitHub...');
+
+        try {
+          const uploads = Array.from(state.uploads.values());
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: authHeaders(true),
+            body: JSON.stringify({ content: state.content, uploads }),
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok)
+            throw new Error(payload.error || 'Could not save content.');
+          state.uploads.clear();
+          setStatus(`Saved. Commit ${payload.commitSha.slice(0, 7)} created.`);
+        } catch (error) {
+          setStatus(error.message, true);
+        } finally {
+          state.saving = false;
+          const saveButton = document.querySelector('[data-save]');
+          if (saveButton) saveButton.disabled = false;
+        }
+      }
+
+      function renderLogin() {
+        app.innerHTML = `
+          <section class="card">
+            <div class="brand">
+              <h1>Shane's Hair Studio Admin</h1>
+              <p>Enter the shared admin password to edit site content.</p>
+            </div>
+            <form id="login-form" style="display:grid;gap:14px;margin-top:20px">
+              <label>
+                <span>Admin password</span>
+                <input name="password" type="password" autocomplete="current-password" value="${escapeHtml(state.password)}" autofocus />
+              </label>
+              <button type="submit">Load Content</button>
+              <p class="status ${state.error ? 'error' : ''}" data-status>${escapeHtml(state.error || state.message)}</p>
+            </form>
+          </section>
+        `;
+        document
+          .getElementById('login-form')
+          .addEventListener('submit', loadContent);
+      }
+
+      function renderEditor() {
+        app.innerHTML = `
+          <div class="shell">
+            <header class="topbar">
+              <div class="brand">
+                <h1>Shane's Hair Studio Admin</h1>
+                <p>Edits are committed to GitHub and then published by Cloudflare Pages.</p>
+              </div>
+              <div class="inline-actions">
+                <button class="secondary" data-reload>Reload</button>
+                <button class="secondary" data-logout>Logout</button>
+              </div>
+            </header>
+            ${renderAssets()}
+            ${renderContact()}
+            ${renderCopy()}
+            <div class="sticky-save">
+              <p class="status ${state.error ? 'error' : state.message ? 'ok' : ''}" data-status>${escapeHtml(state.error || state.message)}</p>
+              <button data-save>Save to GitHub</button>
+            </div>
+          </div>
+        `;
+        bindEditorEvents();
+      }
+
+      function renderAssets() {
+        const assets = state.content.assets || {};
+        const rows = ASSET_FIELDS.map(([key, label, folder]) => {
+          const value = assets[key] || '';
+          return `
+            <div class="asset-row">
+              <label>
+                <span>${escapeHtml(label)}</span>
+                <input data-bind="assets.${key}" value="${escapeHtml(value)}" />
+              </label>
+              <div class="inline-actions">
+                ${value ? `<img class="preview-img" src="${escapeHtml(value)}" alt="" />` : ''}
+                <input data-asset-upload="${key}" data-upload-folder="${folder}" type="file" accept="image/*" />
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const gallery = Array.isArray(assets.gallery) ? assets.gallery : [];
+        const galleryRows = gallery
+          .map(
+            (item, index) => `
+          <div class="gallery-item">
+            <label>
+              <span>Gallery Image ${index + 1}</span>
+              <input data-gallery-index="${index}" data-gallery-key="image" value="${escapeHtml(item.image || '')}" />
+            </label>
+            <label>
+              <span>Alt Text</span>
+              <input data-gallery-index="${index}" data-gallery-key="alt" value="${escapeHtml(item.alt || '')}" />
+            </label>
+            <div class="gallery-actions">
+              ${item.image ? `<img class="preview-img" src="${escapeHtml(item.image)}" alt="" />` : ''}
+              <input data-gallery-upload="${index}" type="file" accept="image/*" />
+              <button class="danger" data-gallery-remove="${index}" type="button">Remove</button>
+            </div>
+          </div>
+        `,
+          )
+          .join('');
+
+        return `
+          <details class="section" open>
+            <summary>Images</summary>
+            <div class="section-body">
+              <div class="grid">${rows}</div>
+              <div>
+                <h2>Gallery</h2>
+                <div class="gallery-list">${galleryRows}</div>
+                <button class="secondary" data-gallery-add type="button" style="margin-top:14px">Add Gallery Image</button>
+              </div>
+            </div>
+          </details>
+        `;
+      }
+
+      function renderContact() {
+        const contact = state.content.contact || {};
+        return `
+          <details class="section">
+            <summary>Contact</summary>
+            <div class="section-body">
+              <div class="grid">
+                <label>
+                  <span>Address Lines</span>
+                  <textarea data-address-lines>${escapeHtml((contact.addressLines || []).join('\n'))}</textarea>
+                </label>
+                ${[
+                  'footerAddress',
+                  'mapsUrl',
+                  'mapsEmbed',
+                  'whatsappUrl',
+                  'whatsappDisplay',
+                  'instagramUrl',
+                  'instagramHandle',
+                ]
+                  .map(
+                    (key) => `
+                    <label>
+                      <span>${escapeHtml(labelFromKey(key))}</span>
+                      <textarea data-bind="contact.${key}">${escapeHtml(contact[key] || '')}</textarea>
+                    </label>
+                  `,
+                  )
+                  .join('')}
+              </div>
+            </div>
+          </details>
+        `;
+      }
+
+      function renderCopy() {
+        const copy = state.content.copy || {};
+        const locale = copy[state.locale]
+          ? state.locale
+          : Object.keys(copy)[0] || 'zh';
+        state.locale = locale;
+        const fields = copy[locale] || {};
+        const tabs = LOCALES.filter((code) => copy[code])
+          .map(
+            (code) =>
+              `<button type="button" data-locale="${code}" aria-selected="${code === locale}">${escapeHtml(LOCALE_LABELS[code] || code)}</button>`,
+          )
+          .join('');
+        const fieldRows = Object.keys(fields)
+          .map((key) => {
+            const value = fields[key] || '';
+            const long =
+              value.length > 72 ||
+              value.includes('\n') ||
+              /desc|lead|intro|bullets|note|copyright|text|alt|p$/i.test(key);
+            return `
+              <label>
+                <span>${escapeHtml(labelFromKey(key))}</span>
+                ${
+                  long
+                    ? `<textarea data-bind="copy.${locale}.${key}">${escapeHtml(value)}</textarea>`
+                    : `<input data-bind="copy.${locale}.${key}" value="${escapeHtml(value)}" />`
+                }
+              </label>
+            `;
+          })
+          .join('');
+
+        return `
+          <details class="section">
+            <summary>Text</summary>
+            <div class="section-body">
+              <div class="tabs">${tabs}</div>
+              <div class="copy-grid">${fieldRows}</div>
+            </div>
+          </details>
+        `;
+      }
+
+      function bindEditorEvents() {
+        document.querySelector('[data-save]').addEventListener('click', () => {
+          const saveButton = document.querySelector('[data-save]');
+          saveButton.disabled = true;
+          saveContent();
+        });
+        document
+          .querySelector('[data-reload]')
+          .addEventListener('click', loadContent);
+        document
+          .querySelector('[data-logout]')
+          .addEventListener('click', () => {
+            sessionStorage.removeItem(PASSWORD_KEY);
+            state.password = '';
+            state.content = null;
+            state.uploads.clear();
+            state.message = '';
+            state.error = '';
+            renderLogin();
+          });
+
+        document.querySelectorAll('[data-bind]').forEach((input) => {
+          input.addEventListener('input', () =>
+            setPath(input.dataset.bind, input.value),
+          );
+        });
+
+        const address = document.querySelector('[data-address-lines]');
+        address?.addEventListener('input', () => {
+          state.content.contact.addressLines = address.value
+            .split('\n')
+            .map((line) => line.trim())
+            .filter(Boolean);
+        });
+
+        document.querySelectorAll('[data-locale]').forEach((button) => {
+          button.addEventListener('click', () => {
+            state.locale = button.dataset.locale;
+            renderEditor();
+          });
+        });
+
+        document.querySelectorAll('[data-asset-upload]').forEach((input) => {
+          input.addEventListener('change', async () => {
+            const file = input.files?.[0];
+            if (!file) return;
+            const path = await stageUpload(
+              file,
+              input.dataset.uploadFolder || '',
+            );
+            setPath(`assets.${input.dataset.assetUpload}`, path);
+            setStatus(`Staged ${file.name}. Remember to save.`);
+            renderEditor();
+          });
+        });
+
+        document.querySelectorAll('[data-gallery-index]').forEach((input) => {
+          input.addEventListener('input', () => {
+            const item =
+              state.content.assets.gallery[Number(input.dataset.galleryIndex)];
+            item[input.dataset.galleryKey] = input.value;
+          });
+        });
+
+        document.querySelectorAll('[data-gallery-upload]').forEach((input) => {
+          input.addEventListener('change', async () => {
+            const file = input.files?.[0];
+            if (!file) return;
+            const path = await stageUpload(file, 'site');
+            const item =
+              state.content.assets.gallery[Number(input.dataset.galleryUpload)];
+            item.image = path;
+            setStatus(`Staged ${file.name}. Remember to save.`);
+            renderEditor();
+          });
+        });
+
+        document.querySelectorAll('[data-gallery-remove]').forEach((button) => {
+          button.addEventListener('click', () => {
+            state.content.assets.gallery.splice(
+              Number(button.dataset.galleryRemove),
+              1,
+            );
+            renderEditor();
+          });
+        });
+
+        document
+          .querySelector('[data-gallery-add]')
+          .addEventListener('click', () => {
+            state.content.assets.gallery.push({ image: '', alt: '' });
+            renderEditor();
+          });
+      }
+
+      renderLogin();
+      if (state.password) loadContent();
+    </script>
+  </body>
+</html>
