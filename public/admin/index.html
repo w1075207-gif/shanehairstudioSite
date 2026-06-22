@@ -23,7 +23,8 @@
           const config = jsyaml.load(
             yaml.replaceAll('__SITE_ORIGIN__', window.location.origin),
           );
-          CMS.init({ config });
+          config.load_config_file = false;
+          window.initCMS({ config });
         } catch (error) {
           document.body.innerHTML =
             '<p style="font-family: system-ui, sans-serif; padding: 24px;">Could not load the content manager configuration.</p>';
