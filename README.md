@@ -36,11 +36,13 @@ npx wrangler deploy --keep-vars
 
 Wrangler 4.x requires Node.js 22 or newer.
 
+Pushes to `main` also deploy automatically through GitHub Actions. Add `CLOUDFLARE_API_TOKEN` as a repository secret so the workflow can publish the Worker.
+
 ## Content editing
 
 This site includes a password-protected admin at `/admin/`. Editors can update the salon copy, contact details, gallery images, environment images, hero image, logo, and price list. The editable source file is `src/content/shaneContent.json`, and uploaded media is stored under `public/uploads/shane/`.
 
-The admin calls `/api/admin/content`. The Worker checks a shared admin password, then uses a GitHub token stored in Cloudflare secrets to commit changes back to this repository. After the commit lands on GitHub, redeploy the Worker or let your deployment automation publish the updated static site.
+The admin calls `/api/admin/content`. The Worker checks a shared admin password, then uses a GitHub token stored in Cloudflare secrets to commit changes back to this repository. After the commit lands on GitHub, the GitHub Actions workflow rebuilds and redeploys the Worker.
 
 ### Admin setup
 
