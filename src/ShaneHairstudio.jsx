@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import {
   MESSAGES,
   SHANE_HTML_LANG,
@@ -7,21 +7,11 @@ import {
   writeSavedLocale,
 } from './shaneHairstudio.i18n.js';
 
-import {
-  ABOUT_IMG,
-  ENV_IMG1,
-  ENV_IMG2,
-  ENV_IMG3,
-  GALLERY_IMGS,
-  HERO_BG,
-  NAV_LOGO,
-  PRICE_LIST_URL,
-  TEAM_IMG,
-} from './shaneAssets.js';
+import editableContent from './content/shaneContent.json';
 
 /**
  * Client mockups are visual specifications only. This page is built with real
- * markup/CSS to match that layout; photos are bundled via ./shaneAssets.js (Vite).
+ * markup/CSS to match that layout; photos are resolved from the CMS content file with public uploads as defaults.
  */
 
 /** Design tokens – warm amber-orange (aligned with salon photography) */
@@ -35,14 +25,91 @@ const TEXT = '#ffffff';
 const TEXT_MUTED = 'rgba(255,255,255,0.72)';
 const BORDER = 'rgba(255,255,255,0.08)';
 
-const MAPS_URL = 'https://maps.app.goo.gl/axbCgenAmhye3kq39';
-const MAPS_EMBED =
-  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.214!2d-9.136875400000001!3d38.726738899999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19333796b3ec81%3A0x9e55a011962cd8f8!2sShane\'s%20HairStudio%E3%80%8CAsian%E3%80%8D!5e0!3m2!1sen!2spt!4v1715000000000!5m2!1sen!2spt';
+const CONTACT_DEFAULTS = {
+  addressLines: ['Rua dos Anjos 6A', '1150-191 Lisboa, Portugal'],
+  footerAddress: 'Rua dos Anjos 6A, 1150-191 Lisboa',
+  mapsUrl: 'https://maps.app.goo.gl/axbCgenAmhye3kq39',
+  mapsEmbed:
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.214!2d-9.136875400000001!3d38.726738899999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19333796b3ec81%3A0x9e55a011962cd8f8!2sShane's%20HairStudio%E3%80%8CAsian%E3%80%8D!5e0!3m2!1sen!2spt!4v1715000000000!5m2!1sen!2spt",
+  whatsappUrl: 'https://wa.me/351936825171',
+  whatsappDisplay: '+351 936 825 171',
+  instagramUrl: 'https://www.instagram.com/shane_hairstudio/',
+  instagramHandle: 'shane_hairstudio',
+};
 
-const WHATSAPP_URL = 'https://wa.me/351936825171';
-const WHATSAPP_DISPLAY = '+351 936 825 171';
-const INSTAGRAM_URL = 'https://www.instagram.com/shane_hairstudio/';
-const INSTAGRAM_HANDLE = 'shane_hairstudio';
+const DEFAULT_ASSETS = {
+  navLogo: '/uploads/shane/site/nav-logo.png',
+  heroBackground: '/uploads/shane/site/hero-vw-panorama.png',
+  aboutImage: '/uploads/shane/site/about-shane-storefront.png',
+  teamImage: '/uploads/shane/site/team-attentive-service.png',
+  environmentImage1: '/uploads/shane/site/env-01.png',
+  environmentImage2: '/uploads/shane/site/env-02.png',
+  environmentImage3: '/uploads/shane/site/env-03.png',
+  priceList: '/uploads/shane/price-list.png',
+  gallery: Array.from({ length: 13 }, (_, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    return { image: `/uploads/shane/site/gallery-${n}.png`, alt: '' };
+  }),
+};
+
+const CONTENT_ASSETS = editableContent.assets || {};
+const rawContact = { ...CONTACT_DEFAULTS, ...(editableContent.contact || {}) };
+const CONTENT_CONTACT = {
+  ...rawContact,
+  addressLines: Array.isArray(rawContact.addressLines)
+    ? rawContact.addressLines.filter(
+        (line) => typeof line === 'string' && line.trim(),
+      )
+    : CONTACT_DEFAULTS.addressLines,
+};
+
+function configuredAsset(value, fallback) {
+  return typeof value === 'string' && value.trim() ? value : fallback;
+}
+
+function configuredGallery() {
+  const configured = Array.isArray(CONTENT_ASSETS.gallery)
+    ? CONTENT_ASSETS.gallery
+    : [];
+  const items = configured
+    .map((item) => (typeof item === 'string' ? { image: item, alt: '' } : item))
+    .filter((item) => typeof item?.image === 'string' && item.image.trim());
+  if (items.length) return items;
+  return DEFAULT_ASSETS.gallery;
+}
+
+const SITE_IMAGES = {
+  navLogo: configuredAsset(CONTENT_ASSETS.navLogo, DEFAULT_ASSETS.navLogo),
+  heroBackground: configuredAsset(
+    CONTENT_ASSETS.heroBackground,
+    DEFAULT_ASSETS.heroBackground,
+  ),
+  aboutImage: configuredAsset(
+    CONTENT_ASSETS.aboutImage,
+    DEFAULT_ASSETS.aboutImage,
+  ),
+  teamImage: configuredAsset(
+    CONTENT_ASSETS.teamImage,
+    DEFAULT_ASSETS.teamImage,
+  ),
+  environmentImage1: configuredAsset(
+    CONTENT_ASSETS.environmentImage1,
+    DEFAULT_ASSETS.environmentImage1,
+  ),
+  environmentImage2: configuredAsset(
+    CONTENT_ASSETS.environmentImage2,
+    DEFAULT_ASSETS.environmentImage2,
+  ),
+  environmentImage3: configuredAsset(
+    CONTENT_ASSETS.environmentImage3,
+    DEFAULT_ASSETS.environmentImage3,
+  ),
+  priceList: configuredAsset(
+    CONTENT_ASSETS.priceList,
+    DEFAULT_ASSETS.priceList,
+  ),
+  gallery: configuredGallery(),
+};
 
 const LANG_DISPLAY = { zh: '中文', en: 'EN', pt: 'PT', ko: '한', ja: '日' };
 
@@ -70,7 +137,15 @@ function splitBulletLines(text) {
 
 function IconFeatTeam() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="9" cy="7.5" r="3.25" />
       <circle cx="16" cy="8" r="2.75" />
       <path d="M3.5 19.5v-0.5a4.5 4.5 0 0 1 4.5-4.5h1.2M14.8 14.5h1.2a4.5 4.5 0 0 1 4.5 4.5v0.5" />
@@ -80,7 +155,14 @@ function IconFeatTeam() {
 
 function IconFeatSpark() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinejoin="round"
+    >
       <path d="M12 3.5l1.2 4.2h4.3l-3.5 2.6 1.3 4.2L12 14l-3.3 2.5 1.3-4.2-3.5-2.6h4.3L12 3.5z" />
     </svg>
   );
@@ -88,7 +170,14 @@ function IconFeatSpark() {
 
 function IconFeatDiamond() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinejoin="round"
+    >
       <path d="M12 4.5l7.5 8-7.5 8-7.5-8 7.5-8z" />
     </svg>
   );
@@ -96,7 +185,16 @@ function IconFeatDiamond() {
 
 function IconInstagram() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className="shane-social-svg" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      className="shane-social-svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <rect x="3" y="3" width="18" height="18" rx="5" ry="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" stroke="none" />
@@ -774,8 +872,10 @@ export default function ShaneHairstudio() {
   const [lang, setLang] = useState(() => detectInitialLocale());
   const [lightbox, setLightbox] = useState(null);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
-  const t = MESSAGES[lang];
+  const t = { ...MESSAGES[lang], ...(editableContent.copy?.[lang] || {}) };
   const colon = ['zh', 'ja', 'ko'].includes(lang) ? '：' : ': ';
+  const galleryItems = SITE_IMAGES.gallery;
+  const galleryCount = galleryItems.length;
   const menuRef = useRef(null);
   const burgerRef = useRef(null);
   const langDropdownRef = useRef(null);
@@ -818,16 +918,16 @@ export default function ShaneHairstudio() {
       if (lightbox === null) return;
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        setLightbox((i) => (i <= 0 ? GALLERY_IMGS.length - 1 : i - 1));
+        setLightbox((i) => (i <= 0 ? galleryCount - 1 : i - 1));
       }
       if (e.key === 'ArrowRight') {
         e.preventDefault();
-        setLightbox((i) => (i >= GALLERY_IMGS.length - 1 ? 0 : i + 1));
+        setLightbox((i) => (i >= galleryCount - 1 ? 0 : i + 1));
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [lightbox]);
+  }, [galleryCount, lightbox]);
 
   useEffect(() => {
     if (!langMenuOpen) return undefined;
@@ -860,20 +960,34 @@ export default function ShaneHairstudio() {
             <a className="shane-brand" href="#home">
               <img
                 className="shane-brand-logo"
-                src={NAV_LOGO}
+                src={SITE_IMAGES.navLogo}
                 alt={t.navBrand}
                 loading="eager"
                 decoding="async"
               />
             </a>
             <ul className="shane-nav-links" ref={menuRef}>
-              <li><a href="#home">{t.navHome}</a></li>
-              <li><a href="#services">{t.navServices}</a></li>
-              <li><a href="#digitperm">{t.navDigitperm}</a></li>
-              <li><a href="#about">{t.navAbout}</a></li>
-              <li><a href="#gallery">{t.navGallery}</a></li>
-              <li><a href="#environment">{t.navEnvironment}</a></li>
-              <li><a href="#contact">{t.navContact}</a></li>
+              <li>
+                <a href="#home">{t.navHome}</a>
+              </li>
+              <li>
+                <a href="#services">{t.navServices}</a>
+              </li>
+              <li>
+                <a href="#digitperm">{t.navDigitperm}</a>
+              </li>
+              <li>
+                <a href="#about">{t.navAbout}</a>
+              </li>
+              <li>
+                <a href="#gallery">{t.navGallery}</a>
+              </li>
+              <li>
+                <a href="#environment">{t.navEnvironment}</a>
+              </li>
+              <li>
+                <a href="#contact">{t.navContact}</a>
+              </li>
             </ul>
             <div className="shane-nav-actions">
               <div className="shane-lang-dd" ref={langDropdownRef}>
@@ -889,10 +1003,16 @@ export default function ShaneHairstudio() {
                   }}
                 >
                   {LANG_DISPLAY[lang] ?? lang.toUpperCase()}
-                  <span className="shane-lang-dd-caret" aria-hidden>▾</span>
+                  <span className="shane-lang-dd-caret" aria-hidden>
+                    ▾
+                  </span>
                 </button>
                 {langMenuOpen ? (
-                  <ul className="shane-lang-dd-list" role="listbox" aria-label={t.langGroupAria}>
+                  <ul
+                    className="shane-lang-dd-list"
+                    role="listbox"
+                    aria-label={t.langGroupAria}
+                  >
                     {SHANE_LOCALES.map((code) => (
                       <li key={code} role="presentation">
                         <button
@@ -911,7 +1031,9 @@ export default function ShaneHairstudio() {
                   </ul>
                 ) : null}
               </div>
-              <a className="shane-nav-cta" href="#contact">{t.navCta}</a>
+              <a className="shane-nav-cta" href="#contact">
+                {t.navCta}
+              </a>
               <button
                 type="button"
                 className="shane-burger"
@@ -923,7 +1045,9 @@ export default function ShaneHairstudio() {
                   menuRef.current?.classList.toggle('open');
                 }}
               >
-                <span /><span /><span />
+                <span />
+                <span />
+                <span />
               </button>
             </div>
           </nav>
@@ -935,26 +1059,41 @@ export default function ShaneHairstudio() {
               <p className="shane-hero-lead">{t.heroLead}</p>
               <p className="shane-hero-desc">{t.heroDesc}</p>
               <div className="shane-hero-btns">
-                <a className="shane-btn-solid" href="#contact">{t.heroBook}</a>
-                <a className="shane-btn-outline" href="#gallery">{t.heroGallery}</a>
+                <a className="shane-btn-solid" href="#contact">
+                  {t.heroBook}
+                </a>
+                <a className="shane-btn-outline" href="#gallery">
+                  {t.heroGallery}
+                </a>
               </div>
               <div className="shane-hero-features">
                 <div className="shane-hero-feat">
-                  <span className="shane-hero-feat-icon"><IconFeatTeam /></span>
+                  <span className="shane-hero-feat-icon">
+                    <IconFeatTeam />
+                  </span>
                   <span>{t.heroFeat1}</span>
                 </div>
                 <div className="shane-hero-feat">
-                  <span className="shane-hero-feat-icon"><IconFeatSpark /></span>
+                  <span className="shane-hero-feat-icon">
+                    <IconFeatSpark />
+                  </span>
                   <span>{t.heroFeat2}</span>
                 </div>
                 <div className="shane-hero-feat">
-                  <span className="shane-hero-feat-icon"><IconFeatDiamond /></span>
+                  <span className="shane-hero-feat-icon">
+                    <IconFeatDiamond />
+                  </span>
                   <span>{t.heroFeat3}</span>
                 </div>
               </div>
             </div>
             <div className="shane-hero-photo">
-              <img className="shane-hero-photo-img" src={HERO_BG} alt="" decoding="async" />
+              <img
+                className="shane-hero-photo-img"
+                src={SITE_IMAGES.heroBackground}
+                alt=""
+                decoding="async"
+              />
               <div className="shane-hero-photoGrad" aria-hidden />
               <div className="shane-hero-pin">
                 <span aria-hidden>📍</span>
@@ -972,17 +1111,25 @@ export default function ShaneHairstudio() {
               <div className="shane-svc-grid">
                 {services.map((s) => (
                   <div key={s.title} className="shane-svc-card">
-                    <div className="shane-hex" aria-hidden>{s.icon}</div>
+                    <div className="shane-hex" aria-hidden>
+                      {s.icon}
+                    </div>
                     <h3>{s.title}</h3>
                     <p>{s.desc}</p>
-                    <a className="shane-svc-more" href={s.href}>{t.svcMore} &gt;</a>
+                    <a className="shane-svc-more" href={s.href}>
+                      {t.svcMore} &gt;
+                    </a>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section className="shane-sec" id="digitperm" aria-labelledby="shane-digitperm-h2">
+          <section
+            className="shane-sec"
+            id="digitperm"
+            aria-labelledby="shane-digitperm-h2"
+          >
             <div className="shane-inner">
               <div className="shane-sec-head">
                 <h2 id="shane-digitperm-h2">{t.secDigitperm}</h2>
@@ -1023,16 +1170,32 @@ export default function ShaneHairstudio() {
             <div className="shane-inner">
               <div className="shane-about-grid">
                 <div className="shane-about-img">
-                  <img src={ABOUT_IMG} alt={t.aboutImgAlt} loading="lazy" />
+                  <img
+                    src={SITE_IMAGES.aboutImage}
+                    alt={t.aboutImgAlt}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="shane-about-text">
                   <h2>{t.aboutH2}</h2>
                   <p>{t.aboutP}</p>
                   <div className="shane-stats">
-                    <div className="shane-stat"><strong>{t.statYearsStrong}</strong>{t.statTeam}</div>
-                    <div className="shane-stat"><strong>1000+</strong>{t.statClients}</div>
-                    <div className="shane-stat"><strong>{t.statProductsStrong}</strong>{t.statProducts}</div>
-                    <div className="shane-stat"><strong>{t.statComfortStrong}</strong>{t.statComfort}</div>
+                    <div className="shane-stat">
+                      <strong>{t.statYearsStrong}</strong>
+                      {t.statTeam}
+                    </div>
+                    <div className="shane-stat">
+                      <strong>1000+</strong>
+                      {t.statClients}
+                    </div>
+                    <div className="shane-stat">
+                      <strong>{t.statProductsStrong}</strong>
+                      {t.statProducts}
+                    </div>
+                    <div className="shane-stat">
+                      <strong>{t.statComfortStrong}</strong>
+                      {t.statComfort}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1046,15 +1209,15 @@ export default function ShaneHairstudio() {
                 <p className="en">{t.secGallerySub}</p>
               </div>
               <div className="shane-gal-grid">
-                {GALLERY_IMGS.map((src, i) => (
+                {galleryItems.map((item, i) => (
                   <button
-                    key={src}
+                    key={item.image}
                     type="button"
                     className={`shane-gal-item${gallerySlotWide(i) ? ' shane-gal-item--wide' : ''}`}
                     onClick={() => setLightbox(i)}
                     aria-label={`${t.galleryWorkAlt} ${i + 1}`}
                   >
-                    <img src={src} alt="" loading="lazy" />
+                    <img src={item.image} alt={item.alt || ''} loading="lazy" />
                   </button>
                 ))}
               </div>
@@ -1070,15 +1233,31 @@ export default function ShaneHairstudio() {
                 <div className="shane-env-block">
                   <h3>{t.envTeamH3}</h3>
                   <p>{t.envTeamP}</p>
-                  <img src={TEAM_IMG} alt={t.envTeamImgAlt} loading="lazy" />
+                  <img
+                    src={SITE_IMAGES.teamImage}
+                    alt={t.envTeamImgAlt}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="shane-env-block">
                   <h3>{t.envSpaceH3}</h3>
                   <p>{t.envSpaceP}</p>
                   <div className="shane-env-imgs">
-                    <img src={ENV_IMG1} alt={t.envImg1Alt} loading="lazy" />
-                    <img src={ENV_IMG2} alt={t.envImg2Alt} loading="lazy" />
-                    <img src={ENV_IMG3} alt={t.envImg3Alt} loading="lazy" />
+                    <img
+                      src={SITE_IMAGES.environmentImage1}
+                      alt={t.envImg1Alt}
+                      loading="lazy"
+                    />
+                    <img
+                      src={SITE_IMAGES.environmentImage2}
+                      alt={t.envImg2Alt}
+                      loading="lazy"
+                    />
+                    <img
+                      src={SITE_IMAGES.environmentImage3}
+                      alt={t.envImg3Alt}
+                      loading="lazy"
+                    />
                   </div>
                 </div>
               </div>
@@ -1095,8 +1274,12 @@ export default function ShaneHairstudio() {
                 <div className="shane-contact-col">
                   <h4>{t.addrLabel}</h4>
                   <p>
-                    Rua dos Anjos 6A<br />
-                    1150-191 Lisboa, Portugal
+                    {CONTENT_CONTACT.addressLines.map((line, i) => (
+                      <Fragment key={line}>
+                        {i > 0 ? <br /> : null}
+                        {line}
+                      </Fragment>
+                    ))}
                   </p>
                   <h4 style={{ marginTop: 20 }}>{t.hoursLabel}</h4>
                   <p>
@@ -1108,7 +1291,7 @@ export default function ShaneHairstudio() {
                 <div className="shane-map">
                   <iframe
                     title={t.mapTitle}
-                    src={MAPS_EMBED}
+                    src={CONTENT_CONTACT.mapsEmbed}
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     allowFullScreen
@@ -1117,28 +1300,54 @@ export default function ShaneHairstudio() {
                 <div className="shane-contact-col">
                   <h4>{t.bookH4}</h4>
                   <p>
-                    <a className="shane-btn-solid" href={MAPS_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: 4 }}>
+                    <a
+                      className="shane-btn-solid"
+                      href={CONTENT_CONTACT.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: 'inline-block', marginTop: 4 }}
+                    >
                       {t.googleMaps}
                     </a>
                   </p>
                   <h4 style={{ marginTop: 20 }}>{t.contactH4}</h4>
                   <p>
-                    {t.labelWhatsApp}{colon}
-                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                      {WHATSAPP_DISPLAY}
+                    {t.labelWhatsApp}
+                    {colon}
+                    <a
+                      href={CONTENT_CONTACT.whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {CONTENT_CONTACT.whatsappDisplay}
                     </a>
                   </p>
                   <p style={{ marginTop: 8 }}>
-                    {t.labelInstagram}{colon}
-                    <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
-                      @{INSTAGRAM_HANDLE}
+                    {t.labelInstagram}
+                    {colon}
+                    <a
+                      href={CONTENT_CONTACT.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      @{CONTENT_CONTACT.instagramHandle}
                     </a>
                   </p>
                   <div className="shane-social" style={{ marginTop: 16 }}>
-                    <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label={t.ariaInstagram}>
+                    <a
+                      href={CONTENT_CONTACT.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={t.ariaInstagram}
+                    >
                       <IconInstagram />
                     </a>
-                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label={`${t.ariaWhatsApp} ${WHATSAPP_DISPLAY}`}>
+                    <a
+                      href={CONTENT_CONTACT.whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${t.ariaWhatsApp} ${CONTENT_CONTACT.whatsappDisplay}`}
+                    >
                       <IconWhatsApp />
                     </a>
                   </div>
@@ -1148,40 +1357,79 @@ export default function ShaneHairstudio() {
           </section>
 
           <div className="shane-price-strip">
-            <p style={{ color: TEXT_MUTED, fontSize: '0.88rem', marginBottom: 8 }}>{t.priceIntro}</p>
-            <a href={PRICE_LIST_URL} target="_blank" rel="noopener noreferrer">{t.priceLink}</a>
+            <p
+              style={{
+                color: TEXT_MUTED,
+                fontSize: '0.88rem',
+                marginBottom: 8,
+              }}
+            >
+              {t.priceIntro}
+            </p>
+            <a
+              href={SITE_IMAGES.priceList}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.priceLink}
+            </a>
           </div>
 
           <footer className="shane-foot">
             <div className="shane-foot-grid">
               <div className="shane-foot-brand">{t.footerBrand}</div>
               <div className="shane-foot-mid">
-                {t.labelWhatsApp}{colon}
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ color: ORANGE }}>
-                  {WHATSAPP_DISPLAY}
+                {t.labelWhatsApp}
+                {colon}
+                <a
+                  href={CONTENT_CONTACT.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: ORANGE }}
+                >
+                  {CONTENT_CONTACT.whatsappDisplay}
                 </a>
                 <br />
-                {t.labelInstagram}{colon}
-                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" style={{ color: ORANGE }}>
-                  @{INSTAGRAM_HANDLE}
+                {t.labelInstagram}
+                {colon}
+                <a
+                  href={CONTENT_CONTACT.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: ORANGE }}
+                >
+                  @{CONTENT_CONTACT.instagramHandle}
                 </a>
                 <br />
-                Rua dos Anjos 6A, 1150-191 Lisboa
+                {CONTENT_CONTACT.footerAddress}
               </div>
               <div style={{ justifySelf: 'end' }} className="shane-social">
-                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label={t.ariaInstagram}>
+                <a
+                  href={CONTENT_CONTACT.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t.ariaInstagram}
+                >
                   <IconInstagram />
                 </a>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label={`${t.ariaWhatsApp} ${WHATSAPP_DISPLAY}`}>
+                <a
+                  href={CONTENT_CONTACT.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${t.ariaWhatsApp} ${CONTENT_CONTACT.whatsappDisplay}`}
+                >
                   <IconWhatsApp />
                 </a>
               </div>
             </div>
             <p className="shane-foot-copy">
-              {t.footerCopyright.replace('{{year}}', String(new Date().getFullYear()))}
+              {t.footerCopyright.replace(
+                '{{year}}',
+                String(new Date().getFullYear()),
+              )}
             </p>
           </footer>
-      </div>
+        </div>
       </div>
       {lightbox !== null ? (
         <div
@@ -1199,7 +1447,7 @@ export default function ShaneHairstudio() {
           />
           <figure className="shane-lightbox-fig">
             <img
-              src={GALLERY_IMGS[lightbox]}
+              src={galleryItems[lightbox]?.image}
               alt={`${t.galleryWorkAlt} ${lightbox + 1}`}
             />
           </figure>
@@ -1220,7 +1468,7 @@ export default function ShaneHairstudio() {
             aria-label={t.lightboxPrev}
             onClick={(e) => {
               e.stopPropagation();
-              setLightbox((i) => (i <= 0 ? GALLERY_IMGS.length - 1 : i - 1));
+              setLightbox((i) => (i <= 0 ? galleryCount - 1 : i - 1));
             }}
           >
             ‹
@@ -1231,7 +1479,7 @@ export default function ShaneHairstudio() {
             aria-label={t.lightboxNext}
             onClick={(e) => {
               e.stopPropagation();
-              setLightbox((i) => (i >= GALLERY_IMGS.length - 1 ? 0 : i + 1));
+              setLightbox((i) => (i >= galleryCount - 1 ? 0 : i + 1));
             }}
           >
             ›

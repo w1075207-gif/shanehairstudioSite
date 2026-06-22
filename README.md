@@ -49,8 +49,41 @@ Use a local Node 22+ when Wrangler 4 is involved.
 
 This app is a single HTML shell at `/` with no client-side router; no SPA rewrite rules are required unless you add routes later.
 
+## Content editing with Decap CMS
+
+This site includes a Decap CMS admin at `/admin/`. Editors can update the salon copy, contact details, gallery images, environment images, hero image, logo, and price list. The editable source file is `src/content/shaneContent.json`, and uploaded media is stored under `public/uploads/shane/`.
+
+Decap saves changes back to GitHub. After a save, Cloudflare Pages will rebuild and publish the new static site.
+
+### GitHub OAuth setup
+
+1. In GitHub, go to **Settings → Developer settings → OAuth Apps → New OAuth App**.
+2. Use your deployed site URL for the homepage URL, for example:
+
+   ```text
+   https://your-domain.com/admin/
+   ```
+
+3. Use this authorization callback URL:
+
+   ```text
+   https://your-domain.com/api/callback
+   ```
+
+4. Copy the OAuth app's client ID and client secret.
+5. In Cloudflare Pages, add these environment variables for Production and Preview:
+
+   | Variable | Value |
+   |----------|-------|
+   | `GITHUB_CLIENT_ID` | GitHub OAuth app client ID |
+   | `GITHUB_CLIENT_SECRET` | GitHub OAuth app client secret |
+
+6. Redeploy the site, then visit `/admin/` and sign in with a GitHub account that has push access to this repository.
+
+The admin config uses the current browser origin as `base_url`. GitHub OAuth callback URLs are domain-specific, so for day-to-day editing use the production domain you registered in the OAuth app. To test login on a preview domain, create a second OAuth app or temporarily change the callback URL.
+
 ## Assets
 
-Image files live in `src/assets/shane/` and are imported in `src/shaneAssets.js`. Vite emits them under `/assets/` with content hashes (small identical placeholders may dedupe to one file). Hero uses an `<img>` for reliable loading vs CSS `background-image` + `data:` URLs.
+CMS-managed images live in `public/uploads/shane/` and are referenced by `src/content/shaneContent.json`. New uploads through Decap are committed to that folder and published as static files under `/uploads/shane/`.
 
-Replace the placeholder PNGs in `src/assets/shane/site/` and `src/assets/shane/price-list.png` with your full-resolution salon photos for production.
+The older source images are still kept in `src/assets/shane/` as original project assets, but the live page now reads from the CMS content file.

@@ -1,0 +1,123 @@
+backend:
+  name: github
+  repo: w1075207-gif/shanehairstudioSite
+  branch: main
+  base_url: __SITE_ORIGIN__
+  auth_endpoint: /api/auth
+
+media_folder: public/uploads/shane
+public_folder: /uploads/shane
+
+editor:
+  preview: false
+
+collections:
+  - name: site
+    label: Site
+    files:
+      - name: shane_content
+        label: Shane's Hair Studio
+        file: src/content/shaneContent.json
+        fields:
+          - label: Images
+            name: assets
+            widget: object
+            fields:
+              - { label: Navigation Logo, name: navLogo, widget: image }
+              - { label: Hero Background, name: heroBackground, widget: image }
+              - { label: About Image, name: aboutImage, widget: image }
+              - { label: Team Image, name: teamImage, widget: image }
+              - { label: Environment Image 1, name: environmentImage1, widget: image }
+              - { label: Environment Image 2, name: environmentImage2, widget: image }
+              - { label: Environment Image 3, name: environmentImage3, widget: image }
+              - { label: Price List, name: priceList, widget: image }
+              - label: Gallery
+                name: gallery
+                widget: list
+                summary: '{{fields.image}}'
+                fields:
+                  - { label: Image, name: image, widget: image }
+                  - { label: Alt Text, name: alt, widget: string, required: false }
+          - label: Contact
+            name: contact
+            widget: object
+            fields:
+              - label: Address Lines
+                name: addressLines
+                widget: list
+                field: { label: Line, name: line, widget: string }
+              - { label: Footer Address, name: footerAddress, widget: string }
+              - { label: Google Maps URL, name: mapsUrl, widget: string }
+              - { label: Google Maps Embed URL, name: mapsEmbed, widget: string }
+              - { label: WhatsApp URL, name: whatsappUrl, widget: string }
+              - { label: WhatsApp Display, name: whatsappDisplay, widget: string }
+              - { label: Instagram URL, name: instagramUrl, widget: string }
+              - { label: Instagram Handle, name: instagramHandle, widget: string }
+          - label: Copy
+            name: copy
+            widget: object
+            fields:
+              - label: Traditional Chinese
+                name: zh
+                widget: object
+                fields: &locale_fields
+                  - { label: Hero Title, name: heroTitle, widget: string }
+                  - { label: Hero Subtitle, name: heroSub, widget: string }
+                  - { label: Hero Lead, name: heroLead, widget: string }
+                  - { label: Hero Description, name: heroDesc, widget: text }
+                  - { label: Hero Location Pin, name: heroPin, widget: string }
+                  - { label: Service Cut Title, name: svcCut, widget: string }
+                  - { label: Service Cut Description, name: svcCutDesc, widget: text }
+                  - { label: Service Colour Title, name: svcColor, widget: string }
+                  - { label: Service Colour Description, name: svcColorDesc, widget: text }
+                  - { label: Service Perm Title, name: svcPerm, widget: string }
+                  - { label: Service Perm Description, name: svcPermDesc, widget: text }
+                  - { label: Service Styling Title, name: svcStyle, widget: string }
+                  - { label: Service Styling Description, name: svcStyleDesc, widget: text }
+                  - { label: About Image Alt, name: aboutImgAlt, widget: string }
+                  - { label: About Heading, name: aboutH2, widget: string }
+                  - { label: About Text, name: aboutP, widget: text }
+                  - { label: Years Stat Strong Text, name: statYearsStrong, widget: string }
+                  - { label: Years Stat Label, name: statTeam, widget: string }
+                  - { label: Clients Stat Label, name: statClients, widget: string }
+                  - { label: Products Stat Label, name: statProducts, widget: string }
+                  - { label: Products Stat Strong Text, name: statProductsStrong, widget: string }
+                  - { label: Comfort Stat Label, name: statComfort, widget: string }
+                  - { label: Comfort Stat Strong Text, name: statComfortStrong, widget: string }
+                  - { label: Digital Perm Section Heading, name: secDigitperm, widget: string }
+                  - { label: Digital Perm Section Eyebrow, name: secDigitpermSub, widget: string }
+                  - { label: Digital Perm Title, name: digitpermTitle, widget: string }
+                  - { label: Digital Perm Lead, name: digitpermLead, widget: text }
+                  - { label: Digital Perm Block A Heading, name: digitpermH3a, widget: string }
+                  - { label: Digital Perm Block A Intro, name: digitpermIntroA, widget: text }
+                  - { label: Digital Perm Block A Bullets, name: digitpermBulletsA, widget: text }
+                  - { label: Digital Perm Block B Heading, name: digitpermH3b, widget: string }
+                  - { label: Digital Perm Block B Intro, name: digitpermIntroB, widget: text }
+                  - { label: Digital Perm Block B Bullets, name: digitpermBulletsB, widget: text }
+                  - { label: Digital Perm Block C Heading, name: digitpermH3c, widget: string }
+                  - { label: Digital Perm Block C Intro, name: digitpermIntroC, widget: text }
+                  - { label: Digital Perm Block C Bullets, name: digitpermBulletsC, widget: text }
+                  - { label: Gallery Section Heading, name: secGallery, widget: string }
+                  - { label: Gallery Section Eyebrow, name: secGallerySub, widget: string }
+                  - { label: Gallery Image Label, name: galleryWorkAlt, widget: string }
+                  - { label: Gallery CTA, name: galleryMore, widget: string }
+                  - { label: Team Heading, name: envTeamH3, widget: string }
+                  - { label: Team Text, name: envTeamP, widget: text }
+                  - { label: Team Image Alt, name: envTeamImgAlt, widget: string }
+                  - { label: Environment Heading, name: envSpaceH3, widget: string }
+                  - { label: Environment Text, name: envSpaceP, widget: text }
+                  - { label: Environment Image 1 Alt, name: envImg1Alt, widget: string }
+                  - { label: Environment Image 2 Alt, name: envImg2Alt, widget: string }
+                  - { label: Environment Image 3 Alt, name: envImg3Alt, widget: string }
+                  - { label: Contact Section Heading, name: secContact, widget: string }
+                  - { label: Contact Section Eyebrow, name: secContactSub, widget: string }
+                  - { label: Opening Hours, name: hoursRegularLine, widget: string }
+                  - { label: Opening Hours Note, name: hoursMonSunNote, widget: text }
+                  - { label: Price Intro, name: priceIntro, widget: text }
+                  - { label: Price Link Text, name: priceLink, widget: string }
+                  - { label: Footer Brand, name: footerBrand, widget: string }
+                  - { label: Footer Copyright, name: footerCopyright, widget: string }
+              - { label: English, name: en, widget: object, fields: *locale_fields }
+              - { label: Portuguese, name: pt, widget: object, fields: *locale_fields }
+              - { label: Korean, name: ko, widget: object, fields: *locale_fields }
+              - { label: Japanese, name: ja, widget: object, fields: *locale_fields }
