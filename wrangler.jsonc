@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "shanehairstudiosite",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-06-22",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "vars": {
+    "GITHUB_BRANCH": "main"
+  }
+}
