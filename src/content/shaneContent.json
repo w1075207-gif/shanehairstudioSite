@@ -61,12 +61,11 @@
   },
   "contact": {
     "addressLines": [
-      "Rua dos Anjos 6A",
-      "1150-191 Lisboa, Portugal"
+      "Largo santa barbara 6A,Anjos,1150-191"
     ],
-    "footerAddress": "Rua dos Anjos 6A, 1150-191 Lisboa",
+    "footerAddress": "Largo santa barbara 6A,Anjos,1150-191  ",
     "mapsUrl": "https://maps.app.goo.gl/axbCgenAmhye3kq39",
-    "mapsEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.214!2d-9.136875400000001!3d38.726738899999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19333796b3ec81%3A0x9e55a011962cd8f8!2sShane's%20HairStudio%E3%80%8CAsian%E3%80%8D!5e0!3m2!1sen!2spt!4v1715000000000!5m2!1sen!2spt",
+    "mapsEmbed": "https://maps.app.goo.gl/TAmvhsjxjrDAwbod9?g_st=ic",
     "whatsappUrl": "https://wa.me/351936825171",
     "whatsappDisplay": "+351 936 825 171",
     "instagramUrl": "https://www.instagram.com/shane_hairstudio/",
