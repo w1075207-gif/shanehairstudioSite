@@ -10,10 +10,6 @@
     "priceList": "/uploads/shane/price-list.png",
     "gallery": [
       {
-        "image": "/uploads/shane/site/gallery-01.png",
-        "alt": ""
-      },
-      {
         "image": "/uploads/shane/site/gallery-02.png",
         "alt": ""
       },
@@ -56,6 +52,10 @@
       {
         "image": "/uploads/shane/site/gallery-12.png",
         "alt": ""
+      },
+      {
+        "image": "/uploads/shane/site/20260715104338-c2027656-3e36-431e-994a-02a886a7fd98.png",
+        "alt": ""
       }
     ]
   },
@@ -90,7 +90,7 @@
       "aboutImgAlt": "Shane's Hair Studio 設計師於門店前合影",
       "aboutH2": "關於 Shane's Hair Studio",
       "aboutP": "Shane's Hair Studio 以亞洲髮質為基礎，長期深耕數碼燙與燙髮造型；卷度、修飾與日常整理都是我們與您溝通的重點。店址位於里斯本 Anjos，環境舒適，亦可依需求搭配剪髮、染護與造型建議。",
-      "statYearsStrong": "10年+",
+      "statYearsStrong": "20年+",
       "statTeam": "專業經驗",
       "statClients": "滿意顧客",
       "statProducts": "產品",
